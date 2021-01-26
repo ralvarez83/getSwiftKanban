@@ -1,22 +1,34 @@
-import React, { FC } from 'react';
+import React from 'react';
 import Login from "./compontents/login";
-import User from "./interfaces/user";
+import IUser from "./Interfaces/IUser";
 
-class App extends React.Component{
+interface IState {
+  user: IUser | null
+}
+interface IProps {
+}
 
-  state = {
-    user: null
-  };
+class App extends React.Component<IProps, IState>{
 
-  handleLogin(user: User){
-    this.setState({
-      user: user
-    })
+  constructor(props: IProps, ){
+    super(props);
+    this.handleLogin = this.handleLogin.bind(this);
+
+    this.setState({ user: null });
+  }
+
+  
+
+  handleLogin(user: IUser){
+    console.log(user);
+    // this.setState({
+    //   user: user
+    // })
   }
 
   render() {
     
-    if (this.state.user === null){
+    if (this.state === null){
       return(
         <Login onLogin={this.handleLogin} />
       )
