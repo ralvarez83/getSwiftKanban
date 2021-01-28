@@ -1,30 +1,50 @@
+import { stringify } from 'querystring';
 import React, { Component, MouseEvent } from 'react';
 import {Container, Row, Col, Form, FormGroup, Label, Input, Button} from 'reactstrap'
+import AuthenticationRequest from '../classes/AuthenticationRequest';
 import IUser from "../Interfaces/IUser";
 
 interface LoginProps {
   onLogin : (user: IUser) => void;
+  urlLogin: string
 }
 
 export default class Login extends Component<LoginProps>{
 
-  userRef = React.createRef();
-  passRef = React.createRef();
+  private userRef = React.createRef<HTMLInputElement>();
+  private passRef = React.createRef<HTMLInputElement>();
 
   constructor(props: LoginProps){
     super(props);
-    this.userRef = React.createRef();
-    this.passRef = React.createRef();
     this.handleLogin = this.handleLogin.bind(this);
   }
-
+  
   handleLogin = (event: MouseEvent<HTMLFormElement>) => {
     event.preventDefault();
-    
-    this.props.onLogin({
-      user: "Usuario",
-      token: "Token acceso"
-    })
+
+    if (this.props.urlLogin !== null && this.props.urlLogin !== ""){
+      const url = this.props.urlLogin + "secured/auth";
+
+      const user : String = new String(this.userRef.current?.value);
+      const pass : String = new String(this.passRef.current?.value);
+
+
+      var authenticationRequest : AuthenticationRequest = new AuthenticationRequest(user,pass);
+
+      fetch(url, {
+        method: 'POST',
+        body: JSON.stringify(authenticationRequest)
+      })
+        .then(response => response.json()
+          .then((request) => {
+            console.log(request);
+        }));
+    }
+
+    // this.props.onLogin({
+    //   user: "Usuario",
+    //   token: "Token acceso"
+    // })
 
   }
 
@@ -38,16 +58,24 @@ export default class Login extends Component<LoginProps>{
                   <FormGroup>
                     <Label for="user">User</Label>
                     <Input 
+                      required
                       type="text" 
                       name="user" 
                       id="user" 
-                      ref={this.userRef}
+                      innerRef={this.userRef}
                       placeholder="User" 
                     />
                   </FormGroup>
                   <FormGroup>
                     <Label for="password">Password</Label>
-                    <Input type="password" name="password" id="password" placeholder="password" />
+                    <Input 
+                      required
+                      type="password" 
+                      name="password" 
+                      id="password" 
+                      placeholder="password"  
+                      innerRef={this.passRef}
+                    />
                   </FormGroup>
                   <Button>Submit</Button>
                 </Form>
