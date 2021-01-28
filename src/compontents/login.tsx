@@ -1,8 +1,8 @@
-import { stringify } from 'querystring';
 import React, { Component, MouseEvent } from 'react';
 import {Container, Row, Col, Form, FormGroup, Label, Input, Button} from 'reactstrap'
 import AuthenticationRequest from '../classes/AuthenticationRequest';
 import IUser from "../Interfaces/IUser";
+import axios from "axios";
 
 interface LoginProps {
   onLogin : (user: IUser) => void;
@@ -31,14 +31,44 @@ export default class Login extends Component<LoginProps>{
 
       var authenticationRequest : AuthenticationRequest = new AuthenticationRequest(user,pass);
 
-      fetch(url, {
-        method: 'POST',
-        body: JSON.stringify(authenticationRequest)
-      })
-        .then(response => response.json()
-          .then((request) => {
-            console.log(request);
-        }));
+      console.log(JSON.stringify(authenticationRequest));
+      // const axiosInstance = axios.create({
+      //   headers: {
+      //     "Access-Control-Allow-Origin": "*"
+      //   }
+      // });
+      // axiosInstance
+      //   .post(url,authenticationRequest)
+      //   .then(response => {
+      //     console.log(response);
+      //   })
+      //   .catch(e => console.log(e));
+
+        const xhr = new XMLHttpRequest();
+
+        xhr.open('POST', url);
+        xhr.setRequestHeader('X-PINGOTHER', 'pingpong');
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.setRequestHeader('Access-Control-Allow-Origin', 'true');
+        xhr.onreadystatechange = (response) => {
+          console.log(response);
+        };
+        xhr.onerror = (err) => {
+          console.log(err);
+        }
+        xhr.send(JSON.stringify(authenticationRequest));
+      
+      // fetch(url, {
+      //   method: 'POST',
+      //   body: JSON.stringify(authenticationRequest),
+      //   headers: {
+      //     "Access-Control-Allow-Origin": "*"
+      //   }
+      // })
+      //   .then(response => response.json()
+      //     .then((request) => {
+      //       console.log(request);
+      //   }));
     }
 
     // this.props.onLogin({
