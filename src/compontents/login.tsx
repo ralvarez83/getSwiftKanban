@@ -2,7 +2,6 @@ import React, { Component, MouseEvent } from 'react';
 import {Container, Row, Col, Form, FormGroup, Label, Input, Button} from 'reactstrap'
 import AuthenticationRequest from '../classes/AuthenticationRequest';
 import IUser from "../Interfaces/IUser";
-import axios from "axios";
 
 interface LoginProps {
   onLogin : (user: IUser) => void;
@@ -44,31 +43,16 @@ export default class Login extends Component<LoginProps>{
       //   })
       //   .catch(e => console.log(e));
 
-        const xhr = new XMLHttpRequest();
-
-        xhr.open('POST', url);
-        xhr.setRequestHeader('X-PINGOTHER', 'pingpong');
-        xhr.setRequestHeader('Content-Type', 'application/json');
-        xhr.setRequestHeader('Access-Control-Allow-Origin', 'true');
-        xhr.onreadystatechange = (response) => {
-          console.log(response);
-        };
-        xhr.onerror = (err) => {
-          console.log(err);
-        }
-        xhr.send(JSON.stringify(authenticationRequest));
       
-      // fetch(url, {
-      //   method: 'POST',
-      //   body: JSON.stringify(authenticationRequest),
-      //   headers: {
-      //     "Access-Control-Allow-Origin": "*"
-      //   }
-      // })
-      //   .then(response => response.json()
-      //     .then((request) => {
-      //       console.log(request);
-      //   }));
+      fetch(url, {
+        method: 'POST',
+        body: JSON.stringify(authenticationRequest)
+      })
+      .then(res => res.json())
+      .then((data) => {
+        console.log(data);
+      })
+      .catch(console.log)
     }
 
     // this.props.onLogin({
