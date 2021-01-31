@@ -1,22 +1,35 @@
 import React, { Component, MouseEvent } from 'react';
-import {Container, Row, Col, Form, FormGroup, Label, Input, Button} from 'reactstrap'
+import {Container, Row, Col, Form, FormGroup, Label, Input, Button, Alert} from 'reactstrap'
 import AuthenticationRequest from '../classes/AuthenticationRequest';
 import IAuthenticationResponse from '../Interfaces/IAuthenticationResponse';
 import IUser from "../Interfaces/IUser";
+import IAlert from "../Interfaces/IAlert";
+import { isBuffer } from 'util';
 
 interface LoginProps {
   onLogin : (user: IUser) => void;
   urlLogin: string
 }
 
-export default class Login extends Component<LoginProps>{
+interface IState {
+  alert: IAlert
+}
+
+export default class Login extends Component<LoginProps, IState>{
 
   private userRef = React.createRef<HTMLInputElement>();
   private passRef = React.createRef<HTMLInputElement>();
 
-  constructor(props: LoginProps){
+  constructor(props: LoginProps, ){
     super(props);
     this.handleLogin = this.handleLogin.bind(this);
+    this.state = { 
+      alert: {
+        isOpen: false,
+        message: "Login incorrecto",
+        color: "danger"
+      }
+    };
   }
   
   handleLogin = (event: MouseEvent<HTMLFormElement>) => {
@@ -31,20 +44,7 @@ export default class Login extends Component<LoginProps>{
 
       var authenticationRequest : AuthenticationRequest = new AuthenticationRequest(user,pass);
 
-      console.log(JSON.stringify(authenticationRequest));
-      // const axiosInstance = axios.create({
-      //   headers: {
-      //     "Access-Control-Allow-Origin": "*"
-      //   }
-      // });
-      // axiosInstance
-      //   .post(url,authenticationRequest)
-      //   .then(response => {
-      //     console.log(response);
-      //   })
-      //   .catch(e => console.log(e));
-
-      
+      console.log(JSON.stringify(authenticationRequest));      
       fetch(url, {
         method: 'POST',
         body: JSON.stringify(authenticationRequest)
@@ -54,26 +54,28 @@ export default class Login extends Component<LoginProps>{
         var respuesta : IAuthenticationResponse = data;
         if (respuesta.Response.messageView.type === "success") {
           console.log("login CORRECTO");
-
+          const user : IUser = { ...respuesta.Response.details};
+          this.props.onLogin(user);
         }
         else{
-          console.log("login incorrecto");
+          const alert = {... this.state.alert};
+          alert.isOpen = true;
+          this.setState({
+            alert: alert
+          });
         }
       })
       .catch(console.log)
     }
-
-    // this.props.onLogin({
-    //   user: "Usuario",
-    //   token: "Token acceso"
-    // })
-
   }
 
   render() {
-    
+
+    console.log(this.state);
+
     return (
         <Container fluid>
+          <Container className="themed-container">
             <Row fluid>
               <Col className="col-sm-12 col-md-6 offset-md-3">
                 <Form onSubmit={this.handleLogin} className="login-layout">
@@ -103,6 +105,16 @@ export default class Login extends Component<LoginProps>{
                 </Form>
               </Col>
             </Row>
+          </Container>
+          <Container className="themed-container">
+            <Row xs="3">
+              <Col className="col-sm-12 col-md-6 offset-md-3">
+                <Alert color={this.state.alert.color} isOpen={this.state.alert.isOpen} >
+                  {this.state.alert.message}
+                </Alert>
+              </Col>
+            </Row>
+          </Container>
         </Container>
     );
   }

@@ -14,21 +14,23 @@ class App extends React.Component<IProps, IState>{
     super(props);
     this.handleLogin = this.handleLogin.bind(this);
 
-    this.setState({ user: null });
+    this.state = {
+      user: null
+    };
   }
 
   
 
   handleLogin(user: IUser){
     console.log(user);
-    // this.setState({
-    //   user: user
-    // })
+    this.setState({
+      user: user
+    })
   }
 
   render() {
     
-    if (this.state === null){
+    if (this.state.user === null){
       return(
         <Login onLogin={this.handleLogin} urlLogin="https://getswiftkanban-proxy.herokuapp.com/proxy/" />
       )
@@ -37,16 +39,8 @@ class App extends React.Component<IProps, IState>{
       <div className="App">
         <header className="App-header">
           <p>
-            Edit <code>src/App.tsx</code> and save to reload.
+            Hola {this.state.user.userData.firstName}.
           </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
         </header>
       </div>
     );
