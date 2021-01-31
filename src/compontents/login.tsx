@@ -4,7 +4,6 @@ import AuthenticationRequest from '../classes/AuthenticationRequest';
 import IAuthenticationResponse from '../Interfaces/IAuthenticationResponse';
 import IUser from "../Interfaces/IUser";
 import IAlert from "../Interfaces/IAlert";
-import { isBuffer } from 'util';
 
 interface LoginProps {
   onLogin : (user: IUser) => void;
