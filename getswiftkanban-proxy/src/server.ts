@@ -4,6 +4,9 @@ import helmet from 'helmet';
 import cors from 'cors';
 import config from '../config.json';
 import { getFilesWithKeyword } from './utils/getFilesWithKeyword';
+import { createProxyMiddleware, Filter, Options, RequestHandler } from 'http-proxy-middleware';
+
+
 
 const app: Express = express();
 
@@ -25,6 +28,23 @@ if (process.env.NODE_ENV === 'development' || config.NODE_ENV === 'development')
 if (process.env.NODE_ENV === 'production' || config.NODE_ENV === 'production') {
   app.use(helmet());
 }
+const proxyOptions = {
+  target: 'https://login.swiftkanban.com/restapi', // target host
+  changeOrigin: true, // needed for virtual hosted sites
+  ws: true, // proxy websockets
+  pathRewrite: {
+    '^/proxy': '/', // remove base path
+  },
+};
+
+app.use('/proxy', createProxyMiddleware(proxyOptions));
+
+// var proxy = require('express-http-proxy');
+// app.use('/proxy', proxy('login.swiftkanban.com/restapi',{
+//   https: true,
+//   preserveHostHdr: true,
+//   parseReqBody: false
+// }));
 
 /************************************************************************************
  *                               Register all routes
@@ -32,7 +52,7 @@ if (process.env.NODE_ENV === 'production' || config.NODE_ENV === 'production') {
 
 getFilesWithKeyword('router', 'src/app').forEach((file: string) => {
   const { router } = require(file.replace('src', '.'));
-  app.use('/', router);
+  app.use('/api', router);
 })
 
 /************************************************************************************

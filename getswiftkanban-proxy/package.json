@@ -7,6 +7,7 @@
     "build": "tsc",
     "start": "cd build && node src",
     "dev": "nodemon",
+    "deploy": "firebase deploy --only hosting:getswiftkanban-proxy",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "nodemonConfig": {
@@ -38,8 +39,12 @@
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.17.1",
+    "express-http-proxy": "^1.6.2",
+    "firebase-functions": "^3.13.1",
+    "firebase-functions-helper": "^0.10.0",
     "fs": "0.0.1-security",
     "helmet": "^4.4.1",
+    "http-proxy-middleware": "^1.0.6",
     "morgan": "^1.10.0"
   }
 }

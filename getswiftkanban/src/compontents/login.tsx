@@ -1,6 +1,7 @@
 import React, { Component, MouseEvent } from 'react';
 import {Container, Row, Col, Form, FormGroup, Label, Input, Button} from 'reactstrap'
 import AuthenticationRequest from '../classes/AuthenticationRequest';
+import IAuthenticationResponse from '../Interfaces/IAuthenticationResponse';
 import IUser from "../Interfaces/IUser";
 
 interface LoginProps {
@@ -50,7 +51,14 @@ export default class Login extends Component<LoginProps>{
       })
       .then(res => res.json())
       .then((data) => {
-        console.log(data);
+        var respuesta : IAuthenticationResponse = data;
+        if (respuesta.Response.messageView.type === "success") {
+          console.log("login CORRECTO");
+
+        }
+        else{
+          console.log("login incorrecto");
+        }
       })
       .catch(console.log)
     }

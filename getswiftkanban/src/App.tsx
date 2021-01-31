@@ -30,7 +30,7 @@ class App extends React.Component<IProps, IState>{
     
     if (this.state === null){
       return(
-        <Login onLogin={this.handleLogin} urlLogin="https://login.swiftkanban.com/restapi/" />
+        <Login onLogin={this.handleLogin} urlLogin="https://getswiftkanban-proxy.web.app/proxy/" />
       )
     }
     return (
