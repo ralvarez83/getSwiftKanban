@@ -74,9 +74,9 @@ export default class Login extends Component<LoginProps, IState>{
     console.log(this.state);
 
     return (
-        <Container fluid>
+        <Container fluid="true">
           <Container className="themed-container">
-            <Row fluid>
+            <Row fluid="true">
               <Col className="col-sm-12 col-md-6 offset-md-3">
                 <Form onSubmit={this.handleLogin} className="login-layout">
                   <FormGroup>
@@ -106,9 +106,9 @@ export default class Login extends Component<LoginProps, IState>{
               </Col>
             </Row>
           </Container>
-          <Container className="themed-container">
-            <Row xs="3">
-              <Col className="col-sm-12 col-md-6 offset-md-3">
+          <Container className="themed-container" fluid="true">
+            <Row xs="3" fluid="true">
+              <Col className="col-sm-12 col-md-6 offset-md-3" fluid="true">
                 <Alert color={this.state.alert.color} isOpen={this.state.alert.isOpen} >
                   {this.state.alert.message}
                 </Alert>
