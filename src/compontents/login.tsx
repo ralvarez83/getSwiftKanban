@@ -4,8 +4,9 @@ import AuthenticationRequest from '../classes/AuthenticationRequest';
 import IAuthenticationResponse from '../Interfaces/IAuthenticationResponse';
 import IUser from "../Interfaces/IUser";
 import IAlert from "../Interfaces/IAlert";
+import {URLS, HTTP_METHODS} from "../constants";
 
-interface LoginProps {
+interface IProps {
   onLogin : (user: IUser) => void;
   urlLogin: string
 }
@@ -14,12 +15,12 @@ interface IState {
   alert: IAlert
 }
 
-export default class Login extends Component<LoginProps, IState>{
+export default class Login extends Component<IProps, IState>{
 
   private userRef = React.createRef<HTMLInputElement>();
   private passRef = React.createRef<HTMLInputElement>();
 
-  constructor(props: LoginProps, ){
+  constructor(props: IProps, ){
     super(props);
     this.handleLogin = this.handleLogin.bind(this);
     this.state = { 
@@ -35,7 +36,7 @@ export default class Login extends Component<LoginProps, IState>{
     event.preventDefault();
 
     if (this.props.urlLogin !== null && this.props.urlLogin !== ""){
-      const url = this.props.urlLogin + "secured/auth";
+      const url = this.props.urlLogin.concat(URLS.AUTH);
 
       const user : string | undefined = this.userRef.current?.value;
       const pass : string | undefined = this.passRef.current?.value;
