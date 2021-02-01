@@ -51,6 +51,7 @@ export default class Login extends Component<LoginProps, IState>{
       .then(res => res.json())
       .then((data) => {
         var respuesta : IAuthenticationResponse = data;
+        console.log(respuesta);
         if (respuesta.Response.messageView.type === "success") {
           console.log("login CORRECTO");
           const user : IUser = { ...respuesta.Response.details};
