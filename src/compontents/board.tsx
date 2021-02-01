@@ -21,7 +21,7 @@ export default class Board extends Component<IProps>{
         <CardBody>
             <CardTitle tag="h5">{this.props.board.projectName}</CardTitle>
             <CardSubtitle tag="h6" className="mb-2 text-muted">Estado</CardSubtitle>
-            <CardText>{this.props.board.boardId}</CardText>
+            <CardText>{this.props.board.currentState}</CardText>
             <CardSubtitle tag="h6" className="mb-2 text-muted">Última Modificación</CardSubtitle>
             <CardText>{this.props.board.modifiedDate}</CardText>
             <Button>Button</Button>
