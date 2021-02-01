@@ -37,8 +37,8 @@ export default class Login extends Component<LoginProps, IState>{
     if (this.props.urlLogin !== null && this.props.urlLogin !== ""){
       const url = this.props.urlLogin + "secured/auth";
 
-      const user : String = new String(this.userRef.current?.value);
-      const pass : String = new String(this.passRef.current?.value);
+      const user : string | undefined = this.userRef.current?.value;
+      const pass : string | undefined = this.passRef.current?.value;
 
 
       var authenticationRequest : AuthenticationRequest = new AuthenticationRequest(user,pass);
@@ -58,7 +58,7 @@ export default class Login extends Component<LoginProps, IState>{
           this.props.onLogin(user);
         }
         else{
-          const alert = {... this.state.alert};
+          const alert = {...this.state.alert};
           alert.isOpen = true;
           this.setState({
             alert: alert

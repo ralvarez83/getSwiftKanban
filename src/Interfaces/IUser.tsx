@@ -1,5 +1,3 @@
-import React from 'react';
-
 export default interface IUser{
     userData: {
         dateTime: Date,
