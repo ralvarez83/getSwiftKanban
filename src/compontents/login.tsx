@@ -46,7 +46,7 @@ export default class Login extends Component<IProps, IState>{
 
       console.log(JSON.stringify(authenticationRequest));      
       fetch(url, {
-        method: 'POST',
+        method: HTTP_METHODS.POST,
         body: JSON.stringify(authenticationRequest)
       })
       .then(res => res.json())

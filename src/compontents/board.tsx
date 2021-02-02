@@ -10,11 +10,6 @@ export default class Board extends Component<IProps>{
 
 
   render() {
-    var inverse = "";
-
-    if(this.props.board.boardId % 2 === 0){
-        inverse =  "body inverse style={{ backgroundColor: '#333', borderColor: '#333' }";
-    }
 
     return (
     <Card body inverse style={{ backgroundColor: '#333', borderColor: '#333' }}>
