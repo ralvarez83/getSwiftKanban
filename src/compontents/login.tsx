@@ -1,10 +1,36 @@
 import React, { Component, MouseEvent } from 'react';
-import {Container, Row, Col, Form, FormGroup, Label, Input, Button, Alert} from 'reactstrap'
 import AuthenticationRequest from '../classes/AuthenticationRequest';
 import IAuthenticationResponse from '../Interfaces/IAuthenticationResponse';
 import IUser from "../Interfaces/IUser";
 import IAlert from "../Interfaces/IAlert";
 import {URLS, HTTP_METHODS} from "../constants";
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import TextField from '@material-ui/core/TextField';
+import Grid from '@material-ui/core/Grid';
+import AccountCircle from '@material-ui/icons/AccountCircle';
+import VpnKey from '@material-ui/icons/VpnKey';
+import Button from '@material-ui/core/Button';
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
+
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    margin: {
+      margin: theme.spacing(1),
+    },
+    root: {
+      '& .MuiTextField-root': {
+        margin: theme.spacing(1),
+        width: 200,
+      },
+    },
+    backdrop: {
+      zIndex: theme.zIndex.drawer + 1,
+      color: '#fff',
+    },
+  }),
+);
+
 
 interface IProps {
   onLogin : (user: IUser) => void;
@@ -71,52 +97,60 @@ export default class Login extends Component<IProps, IState>{
   }
 
   render() {
-
+    const classes = useStyles();
     console.log(this.state);
 
+    const handleToggle = () => {
+      setOpen(!open);
+    };
+    
     return (
-        <Container fluid="true">
-          <Container className="themed-container">
-            <Row fluid="true">
-              <Col className="col-sm-12 col-md-6 offset-md-3">
-                <Form onSubmit={this.handleLogin} className="login-layout">
-                  <FormGroup>
-                    <Label for="user">User</Label>
-                    <Input 
-                      required
-                      type="text" 
-                      name="user" 
-                      id="user" 
-                      innerRef={this.userRef}
-                      placeholder="User" 
-                    />
-                  </FormGroup>
-                  <FormGroup>
-                    <Label for="password">Password</Label>
-                    <Input 
-                      required
-                      type="password" 
-                      name="password" 
-                      id="password" 
-                      placeholder="password"  
-                      innerRef={this.passRef}
-                    />
-                  </FormGroup>
-                  <Button>Submit</Button>
-                </Form>
-              </Col>
-            </Row>
-          </Container>
-          <Container className="themed-container" fluid="true">
-            <Row xs="3" fluid="true">
-              <Col className="col-sm-12 col-md-6 offset-md-3" fluid="true">
-                <Alert color={this.state.alert.color} isOpen={this.state.alert.isOpen} >
-                  {this.state.alert.message}
-                </Alert>
-              </Col>
-            </Row>
-          </Container>
-        </Container>
+      <Grid
+        container
+        direction="row"
+        justify="center"
+        alignItems="center"
+        spacing={1}
+      >
+        <form className={classes.root} noValidate autoComplete="off" onSubmit={this.handleLogin}>
+          <div className={classes.margin}>
+            <Grid container spacing={1} alignItems="flex-end">
+              <Grid item>
+                <AccountCircle />
+              </Grid>
+              <Grid item>
+                <TextField id="input-with-icon-grid" label="Usuario" innerRef={this.userRef} />
+              </Grid>
+            </Grid>
+          </div>
+          <div className={classes.margin}>
+            <Grid container spacing={1} alignItems="flex-end">
+              <Grid item>
+                <VpnKey />
+              </Grid>
+              <Grid item>
+                <TextField 
+                  id="input-with-icon-grid" 
+                  label="Password"             
+                  innerRef={this.passRef}
+                  autoComplete="current-password" />
+              </Grid>
+            </Grid>
+          </div>
+
+          <Button variant="contained" color="primary" onClick={handleToggle}>
+            Entrar
+          </Button>
+        </form>
+          <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+            <Alert onClose={handleClose} severity="success">
+              This is a success message!
+            </Alert>
+          </Snackbar>
+          <Alert color={this.state.alert.color} isOpen={this.state.alert.isOpen} >
+            {this.state.alert.message}
+          </Alert>
+      </Grid>
     );
   }
 }

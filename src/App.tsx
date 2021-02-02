@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container} from 'reactstrap';
+import Container from '@material-ui/core/Container';
 import Login from "./compontents/login";
 import IUser from "./Interfaces/IUser";
 import GetKanban from "./compontents/getkanban";
@@ -44,7 +44,9 @@ class App extends React.Component<IProps, IState>{
     
     if (this.state.user === null){
       return(
-        <Login onLogin={this.handleLogin} urlLogin={config.URL_BASE} />
+        <Container>
+          <Login onLogin={this.handleLogin} urlLogin={config.URL_BASE} />
+        </Container>
       )
     }
     return (
