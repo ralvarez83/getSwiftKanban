@@ -1,66 +1,81 @@
 import React from 'react';
-import Container from '@material-ui/core/Container';
 import Login from "./compontents/login";
 import IUser from "./Interfaces/IUser";
-import GetKanban from "./compontents/getkanban";
+// import GetKanban from "./compontents/getkanban";
 import config from './config.json';
 import IGetKanbanGame from './Interfaces/IGetKanbanGame';
+import { createStyles, Theme } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
+import Paper from '@material-ui/core/Paper';
+import Grid from '@material-ui/core/Grid';
 
-interface IState {
-  user: IUser | null,
-  game: IGetKanbanGame | null
-}
 interface IProps {
 }
 
-class App extends React.Component<IProps, IState>{
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    margin: {
+      margin: theme.spacing(1),
+    },
+    root: {
+      '& .MuiTextField-root': {
+        margin: theme.spacing(1),
+        width: 300,
+      },
+    },
+    paper: {
+      padding: theme.spacing(5)
+    },
+    backdrop: {
+      zIndex: theme.zIndex.drawer + 1,
+      color: '#fff',
+    },
+  }),
+);
 
-  constructor(props: IProps, ){
-    super(props);
-    this.handleLogin = this.handleLogin.bind(this);
-    this.handleUpdateGame = this.handleUpdateGame.bind(this);
 
-    this.state = {
-      user: null,
-      game: null
-    };
-  }
+export default function App (props: IProps) {
 
-  handleLogin(user: IUser){
+  const classes = useStyles();
+  const [user, setUser] = React.useState<IUser | null>(null);
+  const [game, setGame] = React.useState<IGetKanbanGame | null>(null);
+
+  const handleLogin = (user: IUser) =>{
     console.log(user);
-    this.setState({
-      user: user
-    })
+    setUser(user);
   }
 
-  handleUpdateGame(game: IGetKanbanGame){
+  const handleUpdateGame = (game: IGetKanbanGame) =>{
     console.log(game);
-    this.setState({
-      game: game
-    })
+    setGame(game);
   }
 
-  render() {
-    
-    if (this.state.user === null){
-      return(
-        <Container>
-          <Login onLogin={this.handleLogin} urlLogin={config.URL_BASE} />
-        </Container>
-      )
-    }
-    return (
-      <Container>
+ 
+  return(
+    <Grid
+    container
+    direction="row"
+    justify="center"
+    alignItems="center"
+    spacing={1}
+  >
+    { (user === null) && 
+    <Paper className={`${classes.root} ${classes.paper}`}>
         <h1>Bienvenido a GetKanban</h1>
-        <GetKanban 
-          user={this.state.user} 
-          urlBase={config.URL_BASE}  
-          game={this.state.game}
-          onUpateGame={this.handleUpdateGame}
-        />
-      </Container>
-    );
-  }
+        <Login onLogin={handleLogin} urlLogin={config.URL_BASE} />
+    </Paper>
+    }
+    { (user !== null) && 
+    <Paper className={`${classes.root} ${classes.paper}`}>
+      <h1>Juguemos a GetKanban</h1>
+      {/* <GetKanban 
+        user={this.state.user} 
+        urlBase={config.URL_BASE}  
+        game={this.state.game}
+        onUpateGame={this.handleUpdateGame}
+      /> */}
+    </Paper>
+    }
+  </Grid>
+  );
 }
-
-export default App;
