@@ -1,6 +1,6 @@
-import { Grid, GridList, GridListTile } from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import React, { Component } from 'react';
+import React from 'react';
 import IBoard from '../Interfaces/IBoard';
 import BoardData from './boardData';
 
