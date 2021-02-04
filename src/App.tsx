@@ -1,7 +1,7 @@
 import React from 'react';
 import Login from "./compontents/login";
 import IUser from "./Interfaces/IUser";
-// import GetKanban from "./compontents/getkanban";
+import GetKanban from "./compontents/getkanban";
 import config from './config.json';
 import IGetKanbanGame from './Interfaces/IGetKanbanGame';
 import { createStyles, Theme } from '@material-ui/core/styles';
@@ -68,12 +68,12 @@ export default function App (props: IProps) {
     { (user !== null) && 
     <Paper className={`${classes.root} ${classes.paper}`}>
       <h1>Juguemos a GetKanban</h1>
-      {/* <GetKanban 
-        user={this.state.user} 
+      <GetKanban 
+        user={user} 
         urlBase={config.URL_BASE}  
-        game={this.state.game}
-        onUpateGame={this.handleUpdateGame}
-      /> */}
+        game={game}
+        onUpateGame={handleUpdateGame}
+      />
     </Paper>
     }
   </Grid>

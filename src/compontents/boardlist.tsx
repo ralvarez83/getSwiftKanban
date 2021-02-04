@@ -1,13 +1,45 @@
-import { Component } from 'react';
+import { Grid, GridList, GridListTile } from '@material-ui/core';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import React, { Component } from 'react';
 import IBoard from '../Interfaces/IBoard';
-import Board from './board';
+import BoardData from './boardData';
 
 interface IProps {
   boards: IBoard[]
 }
 
-export default class BoardList extends Component<IProps>{
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      display: 'flex',
+      flexWrap: 'wrap',
+      justifyContent: 'space-around',
+      overflow: 'hidden',
+      backgroundColor: theme.palette.background.paper,
+    },
+    Grid: {
+      width: 500,
+      height: 450,
+    },
+  }),
+);
 
+export default function BoardList (props: IProps){
+  const classes = useStyles();
+
+  console.log(props.boards);
+
+  return (
+    <div className={classes.root}>
+      <Grid container spacing={3}>
+        {props.boards.map((board) => (
+          <Grid item xs={3}>
+            <BoardData key={board.boardId} board={board}></BoardData>
+          </Grid>
+        ))}
+      </Grid>
+    </div>
+  );
 
 //     render(){
 //         console.log(this.props.boards);

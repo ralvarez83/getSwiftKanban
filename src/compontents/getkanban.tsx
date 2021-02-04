@@ -1,11 +1,14 @@
 import React, { Component, MouseEvent } from 'react';
 import IUser from "../Interfaces/IUser";
 import User from "./user";
+import BoardData from "./boardData"
 import {URLS, HTTP_METHODS} from "../constants";
 import IGetKanbanGame from '../Interfaces/IGetKanbanGame';
 import IGetBoardsResponse from '../Interfaces/IGetBoardsResponse';
 import IBoard from '../Interfaces/IBoard';
 import BoardList from './boardlist';
+import { createStyles, Grid, makeStyles, Paper, Theme } from '@material-ui/core';
+import Alert from '@material-ui/lab/Alert';
 
 interface IProps {
   user: IUser;
@@ -14,92 +17,106 @@ interface IProps {
   onUpateGame : (game: IGetKanbanGame) => void;
 }
 
-interface IState {
-    boards : IBoard[]
-  }
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      flexGrow: 1,
+    },
+    paper: {
+      padding: theme.spacing(2),
+      textAlign: 'center',
+      color: theme.palette.text.secondary,
+    },
+  }),
+);
 
-export default class GetKanban extends Component<IProps, IState>{
+export default function GetKanban (props: IProps){
+  const classes = useStyles();
+  const [boards, setBoards] = React.useState<IBoard[]>([]);
+  const [alertGetDataBoard, setAlertGetDataBoard] = React.useState(false);
 
-
-//     constructor(props: IProps, ){
-//         super(props);
-
-//         this.state = { 
-//             alert: {
-//                 isOpen: false,
-//                 message: "Error al cargar datos desde el servidor",
-//                 color: "danger"
-//             },
-//             boards:[]
-//         };
-//         if (this.props.game === null){
-//             this.getBoards();
-//         }
-//     }
-
-//     getBoards(){
-//         var url = this.props.urlBase + URLS.BOARD;
+  const getBoards = () => {
+        var url = props.urlBase + URLS.BOARD;
         
-//         fetch(url, {
-//             method: HTTP_METHODS.GET,
-//             headers: {
-//                 "AuthorizationToken": this.props.user.authDetails.AuthorizationToken
-//             }
-//           })
-//           .then(res => res.json())
-//           .then((data) => {
-//             var respuesta : IGetBoardsResponse = data;
-//             this.setState({ boards : respuesta.Response.details.board});
-//           })
-//           .catch(() => {
-//             const alert = {...this.state.alert};
-//             alert.isOpen = true;
-//             this.setState({
-//               alert: alert
-//             });
-//           });
-//     }
+        fetch(url, {
+            method: HTTP_METHODS.GET,
+            headers: {
+                "AuthorizationToken": props.user.authDetails.AuthorizationToken
+            }
+          })
+          .then(res => res.json())
+          .then((data) => {
+            var respuesta : IGetBoardsResponse = data;
+            setBoards(respuesta.Response.details.board);
+          })
+          .catch(() => {
+            setAlertGetDataBoard(true);
+          });
+    }
 
-//     render() {
+    const showAlertDataBoard = () => {
+      if (alertGetDataBoard){
+        return (
+          <Alert severity="error">
+            Se ha producido un error al recuperar los datos de los tableros
+          </Alert>
+        );
+      }
+    }
 
-//       return (
-//           <Container>
+    if(props.game === null && boards.length === 0){
+      getBoards();
+    }    
 
-//                 <Container className="themed-container" fluid="true">
-//                     <Row xs="3" fluid="true">
-//                     <Col className="col-sm-12 col-md-6 offset-md-3" fluid="true">
-//                         <Alert color={this.state.alert.color} isOpen={this.state.alert.isOpen} >
-//                         {this.state.alert.message}
-//                         </Alert>
-//                     </Col>
-//                     </Row>
-//                 </Container>
-//                 <Row>
-//                 <Col>
-//                     <User user={this.props.user}/>
-//                 </Col>
-//                 <Col>
-//                     <Card>
-//                     <CardBody>
-//                         <CardTitle tag="h5">Datos del juego</CardTitle>
-//                         <CardSubtitle tag="h6" className="mb-2 text-muted">Usuario</CardSubtitle>
-//                         <CardText>{this.props.user.userData.personId}</CardText>
-//                         <CardSubtitle tag="h6" className="mb-2 text-muted">Rol</CardSubtitle>
-//                         <CardText>{this.props.user.userData.firstName}</CardText>
-//                     </CardBody>
-//                     </Card>
-//                 </Col>
-//                 <Col>
+    return (
+      <div className={classes.root}>
+        <Grid container spacing={3}>
+          <Grid item xs={6}>
+              <User user={props.user}/>
+          </Grid>
+          <Grid item xs={6}>
+            <Paper className={classes.paper}>
+              
+            </Paper>
+          </Grid>
+          <Grid item xs={12}>
+            {(props.game === null) && <BoardList boards={boards}></BoardList>}
+            {showAlertDataBoard()}
+          </Grid>
+        </Grid>
+      </div>
+       
+       
+      //  <Grid>
+          
+      //         <Row>
+      //         <Col>
+      //             <User user={props.user}/>
+      //         </Col>
+      //         <Col>
+      //             <Card>
+      //             <CardBody>
+      //                 <CardTitle tag="h5">Datos del juego</CardTitle>
+      //                 <CardSubtitle tag="h6" className="mb-2 text-muted">Usuario</CardSubtitle>
+      //                 <CardText>{this.props.user.userData.personId}</CardText>
+      //                 <CardSubtitle tag="h6" className="mb-2 text-muted">Rol</CardSubtitle>
+      //                 <CardText>{this.props.user.userData.firstName}</CardText>
+      //             </CardBody>
+      //             </Card>
+      //         </Col>
+      //         <Col>
 
-//                 </Col>
-//                 <Col>
-//                 </Col>
-//                 </Row>
-//                 <Row>
-//                     {(this.props.game === null) && <BoardList boards={this.state.boards}></BoardList>}
-//                 </Row>
-//           </Container>
-//       );
-//   }
+      //         </Col>
+      //         <Col>
+      //         </Col>
+      //         </Row>
+      //         <Row>
+      //             {(props.game === null) && <BoardList boards={boards}></BoardList>}
+      //         </Row>
+      //         <div className={classes.margin}>
+      //           {showError()}
+      //         </div>
+      //   </Grid>
+    );
 
 }
