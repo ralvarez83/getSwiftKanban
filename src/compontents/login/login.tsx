@@ -48,15 +48,15 @@ export default function Login(props: Props) {
   });
 
   const handleChangeName = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setState(Object.assign({}, state, {user: event.target.value}));
+    setState({...state, ...{user: event.target.value}});
   };
   const handleChangePass = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setState(Object.assign({}, state, {pass: event.target.value}));
+    setState({...state, ...{pass: event.target.value}});
   };
 
   const handleLogin = () => {
     if (!state.open){
-      setState(Object.assign({}, state, {open: true, errorLogin: false}));
+      setState({...state, ...{open: true, errorLogin: false}});
     }
     console.log("Entra en formulario");
     if (props.urlLogin !== null && props.urlLogin !== ""){
@@ -79,7 +79,7 @@ export default function Login(props: Props) {
           props.onLogin(user);
         }
         else{     
-          setState(Object.assign({}, state, {open: false, errorLogin: true}));
+          setState({...state, ...{open: false, errorLogin: true}});
         }
       })
       .catch(console.log)
