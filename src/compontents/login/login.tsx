@@ -1,8 +1,8 @@
-import React, { MouseEvent } from 'react';
-import AuthenticationRequest from '../classes/AuthenticationRequest';
-import IAuthenticationResponse from '../Interfaces/IAuthenticationResponse';
-import IUser from "../Interfaces/IUser";
-import {URLS, HTTP_METHODS} from "../constants";
+import React from 'react';
+import getAuthenticationRequest from '../../functions/get-authentication-request';
+import IAuthenticationResponse from '../../interfaces/i-authentication-response';
+import IUser from "../../interfaces/i-user";
+import {URLS, HTTP_METHODS} from "../../constants";
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
@@ -11,8 +11,8 @@ import VpnKey from '@material-ui/icons/VpnKey';
 import Button from '@material-ui/core/Button';
 import Backdrop from '@material-ui/core/Backdrop';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import Alert from './alert';
-import Paper from '@material-ui/core/Paper';
+import Alert from '../alert/alert';
+import IAuthenticationRequest from '../../interfaces/i-authentication-request';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -53,7 +53,7 @@ export default function Login(props: IProps) {
     if (props.urlLogin !== null && props.urlLogin !== ""){
       const url = props.urlLogin.concat(URLS.AUTH);
 
-      var authenticationRequest : AuthenticationRequest = new AuthenticationRequest(user,pass);
+      var authenticationRequest : IAuthenticationRequest = getAuthenticationRequest(user,pass);
 
       console.log(JSON.stringify(authenticationRequest));      
       fetch(url, {

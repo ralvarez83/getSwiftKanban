@@ -1,8 +1,8 @@
 import { Grid } from '@material-ui/core';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import React from 'react';
-import IBoard from '../Interfaces/IBoard';
-import BoardData from './boardData';
+import IBoard from '../../interfaces/i-board';
+import BoardData from '../board-data/board-data';
 
 interface IProps {
   boards: IBoard[]

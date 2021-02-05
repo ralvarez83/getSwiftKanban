@@ -1,9 +1,9 @@
 import React from 'react';
-import Login from "./compontents/login";
-import IUser from "./Interfaces/IUser";
-import GetKanban from "./compontents/getkanban";
+import Login from "./compontents/login/login";
+import IUser from "./interfaces/i-user";
+import GetKanban from "./compontents/getkanban/getkanban";
 import config from './config.json';
-import IGetKanbanGame from './Interfaces/IGetKanbanGame';
+import IGetKanbanGame from './interfaces/i-get-kanban-game';
 import { createStyles, Theme } from '@material-ui/core/styles';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';

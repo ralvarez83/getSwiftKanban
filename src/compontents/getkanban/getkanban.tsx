@@ -1,12 +1,11 @@
-import React, { Component, MouseEvent } from 'react';
-import IUser from "../Interfaces/IUser";
-import User from "./user";
-import BoardData from "./boardData"
-import {URLS, HTTP_METHODS} from "../constants";
-import IGetKanbanGame from '../Interfaces/IGetKanbanGame';
-import IGetBoardsResponse from '../Interfaces/IGetBoardsResponse';
-import IBoard from '../Interfaces/IBoard';
-import BoardList from './boardlist';
+import React from 'react';
+import IUser from "../../interfaces/i-user";
+import User from "../user/user";
+import {URLS, HTTP_METHODS} from "../../constants";
+import IGetKanbanGame from '../../interfaces/i-get-kanban-game';
+import IGetBoardsResponse from '../../interfaces/i-get-boards-response';
+import IBoard from '../../interfaces/i-board';
+import BoardList from '../board-list/board-list';
 import { createStyles, Grid, makeStyles, Paper, Theme } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
 
