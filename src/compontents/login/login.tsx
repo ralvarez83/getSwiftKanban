@@ -26,34 +26,43 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-
-interface IProps {
+type Props = {
   onLogin : (user: IUser) => void;
   urlLogin: string
-}
+};
 
-export default function Login(props: IProps) {
+type State = {
+  user: string,
+  pass: string,
+  open: boolean,
+  errorLogin: boolean
+};
+
+export default function Login(props: Props) {
   const classes = useStyles();
-  const [user, setName] = React.useState("");
-  const [pass, setPass] = React.useState("");
-  const [open, setOpen] = React.useState(false);
-  const [errorLogin, setErrorLogin] = React.useState(false);
+  const [state,setState] = React.useState<State>({
+    user: "",
+    pass: "",
+    open: false,
+    errorLogin: false
+  });
 
   const handleChangeName = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setName(event.target.value);
+    setState(Object.assign({}, state, {user: event.target.value}));
   };
   const handleChangePass = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setPass(event.target.value);
+    setState(Object.assign({}, state, {pass: event.target.value}));
   };
 
   const handleLogin = () => {
-    setOpen(true);
-    setErrorLogin(false);
+    if (!state.open){
+      setState(Object.assign({}, state, {open: true, errorLogin: false}));
+    }
     console.log("Entra en formulario");
     if (props.urlLogin !== null && props.urlLogin !== ""){
       const url = props.urlLogin.concat(URLS.AUTH);
 
-      var authenticationRequest : IAuthenticationRequest = getAuthenticationRequest(user,pass);
+      var authenticationRequest : IAuthenticationRequest = getAuthenticationRequest(state.user,state.pass);
 
       console.log(JSON.stringify(authenticationRequest));      
       fetch(url, {
@@ -70,8 +79,7 @@ export default function Login(props: IProps) {
           props.onLogin(user);
         }
         else{     
-          setOpen(false);
-          setErrorLogin(true);
+          setState(Object.assign({}, state, {open: false, errorLogin: true}));
         }
       })
       .catch(console.log)
@@ -79,7 +87,7 @@ export default function Login(props: IProps) {
   }
 
   const showError = () => {
-    if (errorLogin){
+    if (state.errorLogin){
       return (
         <Alert severity="error">
           Usuario o contraseña incorrectos.
@@ -99,7 +107,7 @@ export default function Login(props: IProps) {
             <TextField 
               id="input-with-icon-grid" 
               label="Usuario" 
-              value={user}
+              value={state.user}
               onChange={handleChangeName}
             />
           </Grid>
@@ -115,7 +123,7 @@ export default function Login(props: IProps) {
               id="input-with-icon-grid"
               label="Password"      
               type="password"       
-              value={pass}
+              value={state.pass}
               autoComplete="current-password"
               onChange={handleChangePass}
             />
@@ -130,7 +138,7 @@ export default function Login(props: IProps) {
         </Grid>
       </div>       
 
-      <Backdrop className={classes.backdrop} open={open}>
+      <Backdrop className={classes.backdrop} open={state.open}>
         <CircularProgress color="inherit" />
       </Backdrop>
 
