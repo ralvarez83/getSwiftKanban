@@ -16,7 +16,7 @@ export default function BoardData (props:IProps){
           component="img"
           alt="Contemplative Reptile"
           height="140"
-          image="/images/cards/KanbanBoard.png"
+          image="/images/cards/kanban-board.png"
           title="Contemplative Reptile"
         />
         <CardContent>
