@@ -54,15 +54,14 @@ export default function Login(props: Props) {
     setState({...state, ...{pass: event.target.value}});
   };
 
-  const handleLogin = () => {
+  const handleLogin = (url: string, user: string, pass: string) => {
     if (!state.open){
       setState({...state, ...{open: true, errorLogin: false}});
     }
     console.log("Entra en formulario");
     if (props.urlLogin !== null && props.urlLogin !== ""){
-      const url = props.urlLogin.concat(URLS.AUTH);
 
-      var authenticationRequest : IAuthenticationRequest = getAuthenticationRequest(state.user,state.pass);
+      var authenticationRequest : IAuthenticationRequest = getAuthenticationRequest(user,pass);
 
       console.log(JSON.stringify(authenticationRequest));      
       fetch(url, {
@@ -132,7 +131,7 @@ export default function Login(props: Props) {
       </div>
       <div className={classes.margin}>
         <Grid container spacing={1} alignItems="center">
-          <Button variant="contained" color="primary" onClick={handleLogin}>
+          <Button variant="contained" color="primary" onClick={() => handleLogin(props.urlLogin.concat(URLS.AUTH), state.user, state.pass)}>
             Entrar
           </Button>
         </Grid>
