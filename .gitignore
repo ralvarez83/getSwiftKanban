@@ -116,3 +116,4 @@ dist
 
 # production
 /build
+*.cache
