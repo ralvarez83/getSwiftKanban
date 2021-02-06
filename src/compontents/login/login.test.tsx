@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, fireEvent, waitFor, screen } from '@testing-library/react';
 import { rest } from 'msw'
 import { setupServer } from 'msw/node'
 import Login, {loginSwiftKanban} from './login';
@@ -43,14 +43,23 @@ beforeAll(() => server.listen())
 afterEach(() => server.resetHandlers())
 afterAll(() => server.close())
 
-test('Login on Component', () => {
+test('Login on Component', async () => {
     const onLogin = (user: IUser) => {
-        expect(user.userData.loginId).toBe("Kanal13");
+        expect(user.authDetails.AuthorizationToken).toEqual("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwZXJzb25JZCI6MTQ4NDY4MywiYXBwQWNjb3VudElkIjoxNjE0OTgxfQ.s7hi_Iwxlbs_Wa12DTTY7ZAwvx2jCiGoJZzB1I0oNNQ");
     };
 
-    render(<Login onLogin={onLogin} urlLogin={urlLogin} />);
-
+    const { container, getByText, getByTestId } = render(<Login onLogin={onLogin} urlLogin={urlLogin} />);
+    await waitFor(() => screen.getByRole('button'))
     
+    const elemUserName = getByTestId(/username/i);
+    elemUserName.value = "Kanal13";
+    fireEvent.change(elemUserName);
+
+    const elemPassword = getByTestId(/password/i);
+    elemPassword.value = "AlumnoKSD";
+    fireEvent.change(elemPassword);
+
+    fireEvent.click(getByText('Entrar'))    
     
 });
 

@@ -14,13 +14,13 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import Alert from '../alert/alert';
 import IAuthenticationRequest from '../../interfaces/i-authentication-request';
 
-export function loginSwiftKanban(url: string, userLogin: string, passLogin: string) : Promise<IUser> {
+export function loginSwiftKanban(url: string, userName: string, password: string) : Promise<IUser> {
 
   var promise = new Promise<IUser>((resolve, reject) => {
     var user : IUser | null = null;
     if (url !== null && url !== ""){
 
-      var authenticationRequest : IAuthenticationRequest = getAuthenticationRequest(userLogin,passLogin);
+      var authenticationRequest : IAuthenticationRequest = getAuthenticationRequest(userName,password);
 
       fetch(url, {
         method: HTTP_METHODS.POST,
@@ -129,7 +129,8 @@ export default function Login(props: Props) {
           </Grid>
           <Grid item>
             <TextField 
-              id="input-with-icon-grid" 
+              id="username" 
+              data-testid="username"
               label="Usuario" 
               value={state.user}
               onChange={handleChangeName}
@@ -144,8 +145,9 @@ export default function Login(props: Props) {
           </Grid>
           <Grid item>
             <TextField 
-              id="input-with-icon-grid"
+              id="passwrod"
               label="Password"      
+              data-testid="password"
               type="password"       
               value={state.pass}
               autoComplete="current-password"
