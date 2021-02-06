@@ -14,6 +14,39 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import Alert from '../alert/alert';
 import IAuthenticationRequest from '../../interfaces/i-authentication-request';
 
+export function loginSwiftKanban(url: string, userLogin: string, passLogin: string) : Promise<IUser> {
+
+  var promise = new Promise<IUser>((resolve, reject) => {
+    var user : IUser | null = null;
+    if (url !== null && url !== ""){
+
+      var authenticationRequest : IAuthenticationRequest = getAuthenticationRequest(userLogin,passLogin);
+
+      fetch(url, {
+        method: HTTP_METHODS.POST,
+        body: JSON.stringify(authenticationRequest)
+      })
+      .then(res => res.json())
+      .then((data) => {
+        var respuesta : IAuthenticationResponse = data;
+        console.log(respuesta);
+        if (respuesta.Response.messageView.type === "success") {
+          const user: IUser | null = { ...respuesta.Response.details};
+          resolve(user);
+        }
+        else{
+          reject(null);
+        }
+      })
+      .catch((err) => {
+        reject(err);
+      })
+    }
+  });
+  
+  return promise;
+}
+
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     margin: {
@@ -35,7 +68,8 @@ type State = {
   user: string,
   pass: string,
   open: boolean,
-  errorLogin: boolean
+  errorLogin: boolean,
+  errorMsg: string
 };
 
 export default function Login(props: Props) {
@@ -44,7 +78,8 @@ export default function Login(props: Props) {
     user: "",
     pass: "",
     open: false,
-    errorLogin: false
+    errorLogin: false,
+    errorMsg: ""
   });
 
   const handleChangeName = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -54,42 +89,32 @@ export default function Login(props: Props) {
     setState({...state, ...{pass: event.target.value}});
   };
 
-  const handleLogin = (url: string, user: string, pass: string) => {
+  const HandleLogin = () => {
+
     if (!state.open){
       setState({...state, ...{open: true, errorLogin: false}});
     }
-    console.log("Entra en formulario");
-    if (props.urlLogin !== null && props.urlLogin !== ""){
+    
+    loginSwiftKanban(props.urlLogin.concat(URLS.AUTH), state.user, state.pass)
+    .then((user: IUser) =>{
+      props.onLogin(user);
+    })
+    .catch((err) => {
+      if (err !== null){
+        setState({...state, ...{open: false, errorLogin: true, errorMsg:"Se ha producido un error en el servidor, intento más tarde"}});
+      }
+      else{
+        setState({...state, ...{open: false, errorLogin: true, errorMsg:"Usuario o contraseña incorrecta"}});
+      }
+    });
+    
+  };
 
-      var authenticationRequest : IAuthenticationRequest = getAuthenticationRequest(user,pass);
-
-      console.log(JSON.stringify(authenticationRequest));      
-      fetch(url, {
-        method: HTTP_METHODS.POST,
-        body: JSON.stringify(authenticationRequest)
-      })
-      .then(res => res.json())
-      .then((data) => {
-        var respuesta : IAuthenticationResponse = data;
-        console.log(respuesta);
-        if (respuesta.Response.messageView.type === "success") {
-          console.log("login CORRECTO");
-          const user : IUser = { ...respuesta.Response.details};
-          props.onLogin(user);
-        }
-        else{     
-          setState({...state, ...{open: false, errorLogin: true}});
-        }
-      })
-      .catch(console.log)
-    }
-  }
-
-  const showError = () => {
-    if (state.errorLogin){
+  const showError = (errorLogin:boolean, errorMsg:string) => {
+    if (errorLogin){
       return (
         <Alert severity="error">
-          Usuario o contraseña incorrectos.
+          {errorMsg}
         </Alert>
       );
     }
@@ -131,7 +156,7 @@ export default function Login(props: Props) {
       </div>
       <div className={classes.margin}>
         <Grid container spacing={1} alignItems="center">
-          <Button variant="contained" color="primary" onClick={() => handleLogin(props.urlLogin.concat(URLS.AUTH), state.user, state.pass)}>
+          <Button variant="contained" color="primary" onClick={HandleLogin}>
             Entrar
           </Button>
         </Grid>
@@ -142,7 +167,7 @@ export default function Login(props: Props) {
       </Backdrop>
 
       <div className={classes.margin}>
-        {showError()}
+        {showError(state.errorLogin, state.errorMsg)}
       </div>
     </form>
   );
