@@ -40,6 +40,12 @@ export default function App (props: IProps) {
   const [user, setUser] = React.useState<IUser | null>(null);
   const [game, setGame] = React.useState<IGetKanbanGame | null>(null);
 
+  if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
+    console.log("Enviroment: Dev");
+  } else {
+    console.log("Enviroment: Pro");
+  }
+
   const handleLogin = (user: IUser) =>{
     console.log(user);
     setUser(user);
