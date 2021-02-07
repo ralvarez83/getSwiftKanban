@@ -13,6 +13,8 @@ import Backdrop from '@material-ui/core/Backdrop';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Alert from '../alert/alert';
 import IAuthenticationRequest from '../../interfaces/i-authentication-request';
+import { InputFiles } from 'typescript';
+import { userInfo } from 'os';
 
 export function loginSwiftKanban(url: string, userName: string, password: string) : Promise<IUser> {
 
@@ -47,6 +49,27 @@ export function loginSwiftKanban(url: string, userName: string, password: string
   return promise;
 }
 
+export function  inputIsEmpty (inputToValidate:InputField): InputField {
+  var inputReturn : InputField = {... inputToValidate} 
+  
+  if (inputReturn.value === ""){
+    inputReturn.error = true;
+    inputReturn.errorText = "Campo obligatorio";
+  }
+  
+  return inputReturn;
+}
+
+export function  valueInputIsEmpty (valueToValidate:string): InputField {
+  var inputReturn : InputField = {
+    value: valueToValidate,
+    error: false,
+    errorText: ""
+  };
+  
+  return inputIsEmpty(inputReturn);
+}
+
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     margin: {
@@ -64,9 +87,15 @@ type Props = {
   urlLogin: string
 };
 
+export type InputField ={
+  value: string,
+  error: boolean,
+  errorText: string
+}
+
 type State = {
-  user: string,
-  pass: string,
+  user: InputField,
+  pass: InputField,
   open: boolean,
   errorLogin: boolean,
   errorMsg: string
@@ -75,18 +104,28 @@ type State = {
 export default function Login(props: Props) {
   const classes = useStyles();
   const [state,setState] = React.useState<State>({
-    user: "",
-    pass: "",
+    user: {
+      value: "",
+      error: false,
+      errorText: ""
+    },
+    pass: {
+      value: "",
+      error: false,
+      errorText: ""
+    },
     open: false,
     errorLogin: false,
     errorMsg: ""
   });
 
   const handleChangeName = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setState({...state, ...{user: event.target.value}});
+    const user : InputField = valueInputIsEmpty(event.target.value);
+    setState({...state, ...{user: user}});
   };
   const handleChangePass = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setState({...state, ...{pass: event.target.value}});
+    const password : InputField = valueInputIsEmpty(event.target.value);
+    setState({...state, ...{pass: password}});
   };
 
   const HandleLogin = () => {
@@ -94,19 +133,27 @@ export default function Login(props: Props) {
     if (!state.open){
       setState({...state, ...{open: true, errorLogin: false}});
     }
-    
-    loginSwiftKanban(props.urlLogin.concat(URLS.AUTH), state.user, state.pass)
-    .then((user: IUser) =>{
-      props.onLogin(user);
-    })
-    .catch((err) => {
-      if (err !== null){
-        setState({...state, ...{open: false, errorLogin: true, errorMsg:"Se ha producido un error en el servidor, intento más tarde"}});
-      }
-      else{
-        setState({...state, ...{open: false, errorLogin: true, errorMsg:"Usuario o contraseña incorrecta"}});
-      }
-    });
+
+    const userNameInput = inputIsEmpty(state.user);
+    const passwordInput = inputIsEmpty(state.pass);
+
+    if (userNameInput.error || passwordInput.error){
+      setState({...state, ...{open: false, user: userNameInput, pass: passwordInput}});
+    }
+    else{
+      loginSwiftKanban(props.urlLogin.concat(URLS.AUTH), state.user.value, state.pass.value)
+      .then((user: IUser) =>{
+        props.onLogin(user);
+      })
+      .catch((err) => {
+        if (err !== null){
+          setState({...state, ...{open: false, errorLogin: true, errorMsg:"Se ha producido un error en el servidor, intento más tarde"}});
+        }
+        else{
+          setState({...state, ...{open: false, errorLogin: true, errorMsg:"Usuario o contraseña incorrecta"}});
+        }
+      });
+    }
     
   };
 
@@ -129,11 +176,14 @@ export default function Login(props: Props) {
           </Grid>
           <Grid item>
             <TextField 
+              required
+              error={state.user.error}
               id="username" 
               data-testid="username"
               label="Usuario" 
-              value={state.user}
+              value={state.user.value}
               onChange={handleChangeName}
+              helperText={state.user.errorText}
             />
           </Grid>
         </Grid>
@@ -144,14 +194,17 @@ export default function Login(props: Props) {
             <VpnKey />
           </Grid>
           <Grid item>
-            <TextField 
+            <TextField  
+              required
+              error={state.pass.error}
               id="passwrod"
               label="Password"      
               data-testid="password"
               type="password"       
-              value={state.pass}
+              value={state.pass.value}
               autoComplete="current-password"
               onChange={handleChangePass}
+              helperText={state.pass.errorText}
             />
           </Grid>
         </Grid>

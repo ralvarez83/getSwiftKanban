@@ -2,7 +2,7 @@ import React from 'react';
 import { render, fireEvent, waitFor, screen } from '@testing-library/react';
 import { rest } from 'msw'
 import { setupServer } from 'msw/node'
-import Login, {loginSwiftKanban} from './login';
+import Login, {loginSwiftKanban, InputField, inputIsEmpty, valueInputIsEmpty} from './login';
 import IUser from '../../interfaces/i-user';
 
 
@@ -103,4 +103,38 @@ test('Login on Switf Kanban server error', () =>{
     .catch((err) => {
         expect(err).not.toBe(null);
     })
+})
+
+test('It validates if an input field is not empty and say is empty ', () =>{
+    const inputToValidate : InputField = {
+        value: "",
+        error: false,
+        errorText: ""
+    };
+    var inputReturn : InputField;
+    const inputExpected: InputField = {
+        value: "",
+        error: true,
+        errorText: "Campo obligatorio"
+    }
+
+    inputReturn = inputIsEmpty(inputToValidate);
+
+    expect(inputReturn).toMatchObject(inputExpected);
+    
+})
+
+test('It validates if a value input field is not empty and say is empty ', () =>{
+    const valueToValidate : string = "";
+    var inputReturn : InputField;
+    const inputExpected: InputField = {
+        value: "",
+        error: true,
+        errorText: "Campo obligatorio"
+    }
+
+    inputReturn = valueInputIsEmpty(valueToValidate);
+
+    expect(inputReturn).toMatchObject(inputExpected);
+    
 })
