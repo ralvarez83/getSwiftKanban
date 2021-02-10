@@ -13,13 +13,10 @@ import Backdrop from '@material-ui/core/Backdrop';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Alert from '../alert/alert';
 import IAuthenticationRequest from '../../interfaces/i-authentication-request';
-import { InputFiles } from 'typescript';
-import { userInfo } from 'os';
 
 export function loginSwiftKanban(url: string, userName: string, password: string) : Promise<IUser> {
 
   var promise = new Promise<IUser>((resolve, reject) => {
-    var user : IUser | null = null;
     if (url !== null && url !== ""){
 
       var authenticationRequest : IAuthenticationRequest = getAuthenticationRequest(userName,password);
@@ -50,7 +47,7 @@ export function loginSwiftKanban(url: string, userName: string, password: string
 }
 
 export function  inputIsEmpty (inputToValidate:InputField): InputField {
-  var inputReturn : InputField = {... inputToValidate} 
+  var inputReturn : InputField = {...inputToValidate} 
   
   if (inputReturn.value === ""){
     inputReturn.error = true;
