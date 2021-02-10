@@ -35,7 +35,10 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     footerPowerBy:{
       textAlign: "center",
-      fontSize: "1em"
+      fontSize: "1em",
+      '& a': {
+        color: "green"
+      }
     }
   }),
 );
