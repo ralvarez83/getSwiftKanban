@@ -89,7 +89,7 @@ export default function App (props: IProps) {
     }
     </Grid>
     <Grid item className={classes.footerPowerBy} xs={12}>
-      Power by <a href="https://www.estratecno.es" target="_blank">www.estratecno.es</a>
+      Powered by <a href="https://www.estratecno.es" target="_blank" rel="noreferrer">www.estratecno.es</a>
     </Grid>
   </Grid>
   );
